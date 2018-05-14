@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/login', 'FacebookController@login');
-Route::get('/redirect', 'FacebookController@redirect');
-Route::get('/callback', 'FacebookController@callback');
+Route::get('/', 'GraphController@index')->name('home');
+Route::get('/login', 'GraphController@login')->name('login');
+Route::get('/redirect', 'GraphController@redirect');
+Route::get('/callback', 'GraphController@callback');
+Route::get('/test', 'GraphController@test');
+Route::get('/instagram', 'GraphController@instagramInfo');
