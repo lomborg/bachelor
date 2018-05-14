@@ -13,15 +13,19 @@
         <!-- Styles -->
     </head>
     <body>
-
-        <h2>Select the right Instagram account</h2>
+        <h2>So, {{ Auth::User()->name }}</h2>
+        <h3>Please select the Instagram account you would like to use</h3>
         <select>
             @foreach($instagramAccounts as $instagramAccount)
             <option value="{{ $instagramAccount['id'] }}">
-                {{ $instagramAccount['name'] }} (
-                {{ $instagramAccount['username'] }}    )
+                {{ $instagramAccount['name'] }} ( {{ $instagramAccount['username'] }} )
             </option>
+            <hr>
             @endforeach
-        </select>            
+        </select>    
+        <a href="">
+            <button>Get info</button>
+        </a>
+        <div id="account-info"></div>        
     </body>
 </html>
