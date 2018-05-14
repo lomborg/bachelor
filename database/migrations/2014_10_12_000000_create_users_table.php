@@ -17,7 +17,10 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password');
+            $table->string('graph_user_id')->unique();
+            $table->string('graph_user_token')->unique();
+            $table->string('graph_instagram_id')->nullable();
+            $table->string('graph_instagram_username')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
