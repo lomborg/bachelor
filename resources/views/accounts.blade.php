@@ -20,7 +20,6 @@
             <option value="{{ $instagramAccount['id'] }}">
                 {{ $instagramAccount['name'] }} ( {{ $instagramAccount['username'] }} )
             </option>
-            <hr>
             @endforeach
         </select>    
         <a href="">
