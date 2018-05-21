@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('instagramwidget:generate')->twiceDaily(8,20);
+        $schedule->command('insights:generate')->dailyAt('07:30');
     }
 
     /**
