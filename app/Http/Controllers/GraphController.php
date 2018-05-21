@@ -7,7 +7,7 @@ use Socialite;
 use Vinkla\Facebook\Facades\Facebook;
 use App\User;
 use Auth;
-
+use Storage;
 
 class GraphController extends Controller
 {
@@ -37,20 +37,6 @@ class GraphController extends Controller
     	Auth::login($authUser, true);
     	return redirect()->route('home');
     	dd($authUser);
-
-    	/*$userToken = $graphUser->token;
-    	$userBusinessAccounts = Facebook::get('/me/accounts?fields=instagram_business_account', $userToken)->getDecodedBody();
-    	$userBusinessAccounts = $userBusinessAccounts["data"];
- 	
-    	$instagramAccounts = [];
-    	foreach ($userBusinessAccounts as $instagramBusiness) {
-    		if (isset( $instagramBusiness['instagram_business_account'])) {
-    			$instagramId = $instagramBusiness['instagram_business_account']['id'];
-    			$instagramAccountInfo = Facebook::get('/'.$instagramId.'?fields=name,username,followers_count,follows_count,website', $userToken)->getDecodedBody();
-    			array_push($instagramAccounts, $instagramAccountInfo);
-
-    		}
-    	}*/
 
     	return view('accounts', compact('instagramAccounts'));
     }
@@ -101,8 +87,40 @@ class GraphController extends Controller
 		$graphUserToken =  $user->graph_user_token;
 		$graphInstagramId = $user->graph_instagram_id;
 
-		$instagramAccountInfo = Facebook::get('/'.$graphInstagramId.'/insights?metric=impressions,reach,profile_views&period=day', $graphUserToken)->getDecodedBody();
-		dd($instagramAccountInfo);
+		$instagramAccountInfo = Facebook::get('/'.$graphInstagramId.'/media?fields=media_type,media_url,permalink,like_count,comments_count,caption', $graphUserToken)->getDecodedBody();
+		$media = $instagramAccountInfo['data'];
+		$feed = [];
+
+		foreach ($media as $img) {
+			array_push($feed, $img);
+		}
+
+		return view('instagram', compact('feed'));
 
     }
+
+    public function dashboard(){
+    	$user = Auth::User();
+		$graphUserToken =  $user->graph_user_token;
+		$graphInstagramId = $user->graph_instagram_id;
+
+		$instagramAccountInfo = Facebook::get('/'.$graphInstagramId.'/insights?metric=impressions,reach,profile_views&period=day', $graphUserToken)->getDecodedBody();
+		$insights = $instagramAccountInfo['data'];
+		return view('dashboard', compact('insights'));
+		dd($instagramAccountInfo);
+    }
+
+    public function mentions(Request $request){
+        dd($request);
+    }
+
+
+    public function widget($id, $columns, $rows, $imagewrap, $instagramid){
+        $html = Storage::get('instagramwidgets/'.$id.'/'.$columns.'/'.$rows.'/'.$imagewrap.'/'.$instagramid.'.html');
+
+        $json = json_encode(['html' => $html]);
+        
+        return response($json)->header('Content-Type', 'text/javascript');
+    } 
+
 }
